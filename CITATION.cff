@@ -1,0 +1,25 @@
+cff-version: 1.2.0
+message: "If you use this adapter, please cite it and the Unified Astronomy Thesaurus."
+title: "indicium-adapters-astronomy"
+abstract: >-
+  Astronomy DomainAdapter for the indicium ecosystem: Unified Astronomy Thesaurus
+  concept enrichment for validated claims, and the classification vocabulary that
+  lets AgenticScienceBuilder recognise astronomy as a domain.
+version: 0.1.0
+date-released: "2026-07-30"
+license: MIT
+type: software
+repository-code: "https://github.com/HolobiomicsLab/indicium-adapters-astronomy"
+authors:
+  - family-names: Nothias
+    given-names: Louis-Félix
+    orcid: "https://orcid.org/0000-0001-6711-6719"
+    affiliation: CNRS
+references:
+  - type: data
+    title: "Unified Astronomy Thesaurus"
+    version: "6.0.0"
+    authors:
+      - name: "American Astronomical Society"
+    repository-code: "https://github.com/astrothesaurus/UAT"
+    url: "http://astrothesaurus.org"

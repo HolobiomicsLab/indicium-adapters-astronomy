@@ -1,0 +1,48 @@
+[build-system]
+requires = ["hatchling>=1.21"]
+build-backend = "hatchling.build"
+
+[project]
+name = "indicium-adapters-astronomy"
+version = "0.1.0"
+description = "Astronomy DomainAdapter for the indicium ecosystem: UAT-backed concept enrichment and classification vocabulary"
+readme = "README.md"
+# 3.11, not the 3.12 the sibling adapters require: this one must be installable
+# into the AgenticScienceBuilder conda environment (Python 3.11), which is where
+# the classification vocabulary it feeds is consumed.
+requires-python = ">=3.11"
+license = { file = "LICENSE" }
+keywords = ["astronomy", "astrophysics", "UAT", "indicium", "ontology", "SSSOM"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering :: Astronomy",
+]
+dependencies = ["indicium-adapters>=0.5.0"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "ruff>=0.6"]
+
+[project.entry-points."indicium.adapters"]
+astronomy = "indicium_adapters_astronomy.astronomy:AstronomyAdapter"
+
+[project.urls]
+Homepage = "https://github.com/HolobiomicsLab/indicium-adapters-astronomy"
+Repository = "https://github.com/HolobiomicsLab/indicium-adapters-astronomy"
+Issues = "https://github.com/HolobiomicsLab/indicium-adapters-astronomy/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/indicium_adapters_astronomy"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"src/indicium_adapters_astronomy/_uat_index.json" = "indicium_adapters_astronomy/_uat_index.json"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]
