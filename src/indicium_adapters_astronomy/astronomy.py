@@ -16,6 +16,73 @@ _ENRICHABLE_SLOTS: Final[tuple[str, ...]] = ("subject", "object", "qualifier")
 # published UAT, so this is the only justification it can honestly claim.
 _LEXICAL: Final[str] = "semapv:LexicalMatching"
 
+# Leaves of UAT "Astronomical techniques" that this adapter does NOT declare as
+# its own. Each names a method several sciences practise -- mass spectrometry is
+# a metabolomics and a proteomics term as much as a spacecraft one, spectroscopy
+# and calibration belong to every measuring science, field of view to any
+# imaging one -- so declaring them lets astronomy claim a mis-filed paper from
+# a field it has nothing to do with. A term two sciences both utter cannot say
+# which of them a paper belongs to, so it is withheld from ALL of them; the
+# 2026-08-25 cross-domain audit applies the same rule to every domain here.
+#
+# This narrows the CLASSIFICATION claim only. ``enrich`` still resolves against
+# the whole thesaurus, so a paper that does spacecraft mass spectrometry keeps
+# its UAT CURIE; astronomy simply stops offering the bare term as evidence of
+# what field the paper is in.
+_NON_DISCRIMINATING: Final[frozenset[str]] = frozenset({
+    "analytical-mathematics",
+    "calibration",
+    "doppler-shift",
+    "field-of-view",
+    "interferometry",
+    "mass-spectrometry",
+    "photometry",
+    "remote-sensing",
+    "spectroscopy",
+})
+
+# Subfields and methods this adapter declares that the two reads below do not
+# reach. Sixteen of them ARE published UAT concepts sitting deeper in the tree
+# than a level-1 branch or an "Astronomical techniques" leaf -- transit
+# photometry is UAT 1709 under "Exoplanet astronomy" -- so naming them widens
+# the read of the field's own vocabulary rather than substituting an editor's
+# list; ``enrich_claim`` still resolves each to its thesaurus CURIE. The rest
+# the corpus attests and UAT does not carry at all, which
+# ``tests/test_vocabulary_provenance.py`` pins term by term so a UAT release
+# that adds one turns the guard red instead of leaving a stale duplicate.
+_SUBFIELDS: Final[tuple[str, ...]] = (
+    "asteroseismology",
+    "celestial-mechanics",
+    "exoplanetary-science",
+    "extragalactic-astronomy",
+    "galactic-astronomy",
+    "gamma-ray-astronomy",
+    "infrared-astronomy",
+    "planetary-science",
+    "radio-astronomy",
+    "solar-physics",
+    "star-formation",
+    "stellar-astrophysics",
+    "time-domain-astronomy",
+    "x-ray-astronomy",
+)
+
+_METHODS: Final[tuple[str, ...]] = (
+    "adaptive-optics",
+    "cosmological-n-body-simulation",
+    "gravitational-lensing-analysis",
+    "gravitational-microlensing",
+    "gravitational-wave-detection",
+    "light-curve-analysis",
+    "pulsar-timing",
+    "radial-velocity-method",
+    "radiative-transfer-modeling",
+    "spectral-energy-distribution-fitting",
+    "supernova-detection",
+    "transit-photometry",
+    "very-long-baseline-interferometry",
+)
+
 
 class AstronomyAdapter:
     """Observational astronomy and astrophysics.
@@ -104,13 +171,26 @@ class AstronomyAdapter:
 
     @property
     def subdomains(self) -> tuple[str, ...]:
-        """The UAT's own level-1 branches, lower-cased and hyphenated."""
-        return tuple(sorted(_slug(name) for name in _uat.top_level_branches()))
+        """The UAT's level-1 branches, widened by the subfields it names below them.
+
+        The branches alone are eleven very coarse divisions, so a paper on
+        asteroseismology or x-ray astronomy matched nothing its own field
+        declares. See ``_SUBFIELDS``.
+        """
+        branches = {_slug(name) for name in _uat.top_level_branches()}
+        return tuple(sorted(branches | set(_SUBFIELDS)))
 
     @property
     def techniques(self) -> tuple[str, ...]:
-        """The leaves of UAT "Astronomical techniques", lower-cased and hyphenated."""
-        return tuple(sorted(_slug(name) for name in _uat.techniques()))
+        """The methods this field alone can claim, thesaurus first.
+
+        The branch is still the source, so the vocabulary moves with a UAT
+        release. Subtracted: the leaves other sciences share
+        (``_NON_DISCRIMINATING``). Added: the measurement methods a paper
+        actually names, which the branch does not enumerate (``_METHODS``).
+        """
+        leaves = {_slug(name) for name in _uat.techniques()} - _NON_DISCRIMINATING
+        return tuple(sorted(leaves | set(_METHODS)))
 
     # ---- protocol methods --------------------------------------------------
 
