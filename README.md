@@ -77,15 +77,15 @@ composing several adapters should prefer a domain-specific adapter's term for su
 
 ## Install
 
+The public dependencies are installed from PyPI with the development extra:
+
 ```bash
-pip install -e .
+python -m pip install -e ".[dev]"
 ```
 
-`requires-python >= 3.11`, deliberately lower than the `>= 3.12` of the sibling adapters, so
-this package can be installed into the AgenticScienceBuilder environment where the
-classification vocabulary it feeds is consumed. Note that `indicium-adapters` itself currently
-requires `>= 3.12`, so that floor has to come down before the ASB environment can load this
-adapter — see the changelog.
+`requires-python >= 3.11`, matching the published base packages, so this package can be
+installed into the AgenticScienceBuilder environment where the classification vocabulary it
+feeds is consumed.
 
 ## Licence
 
