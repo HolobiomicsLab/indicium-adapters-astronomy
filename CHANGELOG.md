@@ -4,6 +4,10 @@ All notable changes to **indicium-adapters-astronomy** are documented in this fi
 Format: [Keep a Changelog 1.1.0](https://keepachangelog.com/en/1.1.0/); versioning:
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). Dates are ISO-8601.
 
+## [Unreleased]
+
+- 2026-11-11: CI and development installs now use the published dependencies from PyPI.
+
 ## [0.1.0] — 2026-07-30
 
 ### Added
